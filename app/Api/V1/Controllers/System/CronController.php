@@ -55,6 +55,9 @@ class CronController extends Controller
         }
         $return['bill_notifications']     = $this->billWarningCronJob($config['force'], $config['date']);
         $return['webhooks']               = $this->webhookCronJob($config['force'], $config['date']);
+        if (true === config('portfolio.enabled')) {
+            $return['portfolio_sync']     = $this->portfolioPriceCronJob($config['force'], $config['date']);
+        }
 
         return response()->api($return);
     }

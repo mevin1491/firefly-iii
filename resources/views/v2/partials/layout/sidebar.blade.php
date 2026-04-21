@@ -185,6 +185,14 @@
                         <p>{{ __('firefly.reports') }}</p>
                     </a>
                 </li>
+                @if(config('portfolio.enabled'))
+                <li class="nav-item">
+                    <a href="{{ route('portfolio.index') }}" class="nav-link @if(Route::is('portfolio.*')) active @endif">
+                        <i class="nav-icon fa-solid fa-chart-line"></i>
+                        <p>Portfolio Tracker</p>
+                    </a>
+                </li>
+                @endif
                 <li class="nav-item">
                     <a href="{{ route('export.index') }}" class="nav-link">
                         <i class="nav-icon fa-solid fa-upload"></i>

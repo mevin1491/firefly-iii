@@ -148,6 +148,14 @@ Route::group(
     }
 );
 
+// Portfolio Tracker
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Portfolio', 'prefix' => 'portfolio', 'as' => 'portfolio.'],
+    static function (): void {
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+    }
+);
+
 // show inactive
 
 /*

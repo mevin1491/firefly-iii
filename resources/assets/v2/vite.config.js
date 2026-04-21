@@ -72,6 +72,9 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     'src/pages/transactions/edit.js',
                     'src/pages/transactions/show.js',
                     'src/pages/transactions/index.js',
+
+                    // portfolio
+                    'src/pages/portfolio/portfolio.js',
                 ],
                 publicDirectory: '../../../public',
                 refresh: true,

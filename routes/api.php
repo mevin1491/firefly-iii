@@ -778,3 +778,41 @@ Route::group(
         );
     }
 );
+
+// Portfolio Tracker API routes
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\Portfolio',
+        'prefix'    => 'v1/portfolio',
+        'as'        => 'api.v1.portfolio.',
+    ],
+    static function (): void {
+        // Accounts
+        Route::get('accounts', ['uses' => 'AccountController@index', 'as' => 'accounts.index']);
+        Route::post('accounts', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
+        Route::get('accounts/{portfolioAccount}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+        Route::put('accounts/{portfolioAccount}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
+        Route::delete('accounts/{portfolioAccount}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
+
+        // Holdings
+        Route::get('holdings', ['uses' => 'HoldingController@index', 'as' => 'holdings.index']);
+        Route::get('holdings/{portfolioHolding}', ['uses' => 'HoldingController@show', 'as' => 'holdings.show']);
+
+        // Transactions
+        Route::get('transactions', ['uses' => 'TransactionController@index', 'as' => 'transactions.index']);
+
+        // Dashboard data endpoints
+        Route::get('dashboard/summary', ['uses' => 'DashboardController@summary', 'as' => 'dashboard.summary']);
+        Route::get('dashboard/value-over-time', ['uses' => 'DashboardController@valueOverTime', 'as' => 'dashboard.value-over-time']);
+        Route::get('dashboard/holdings-breakdown', ['uses' => 'DashboardController@holdingsBreakdown', 'as' => 'dashboard.holdings-breakdown']);
+        Route::get('dashboard/asset-allocation', ['uses' => 'DashboardController@assetAllocation', 'as' => 'dashboard.asset-allocation']);
+        Route::get('dashboard/profit-loss', ['uses' => 'DashboardController@profitLoss', 'as' => 'dashboard.profit-loss']);
+
+        // Sync
+        Route::post('sync', ['uses' => 'SyncController@sync', 'as' => 'sync']);
+        Route::post('sync/{portfolioAccount}', ['uses' => 'SyncController@syncAccount', 'as' => 'sync.account']);
+
+        // Import
+        Route::post('import/{portfolioAccount}', ['uses' => 'ImportController@import', 'as' => 'import']);
+    }
+);
