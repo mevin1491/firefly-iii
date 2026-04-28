@@ -38,6 +38,7 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PortfolioAccount;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Role;
@@ -100,6 +101,11 @@ class User extends Authenticatable
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
+    }
+
+    public function portfolioAccounts(): HasMany
+    {
+        return $this->hasMany(PortfolioAccount::class);
     }
 
     /**

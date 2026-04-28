@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
+use FireflyIII\Support\Cronjobs\PortfolioPriceCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\WebhookCronjob;
 
@@ -138,6 +139,32 @@ trait CronRunner
             'job_succeeded' => $autoBudget->jobSucceeded,
             'job_errored'   => $autoBudget->jobErrored,
             'message'       => $autoBudget->message,
+        ];
+    }
+
+    protected function portfolioPriceCronJob(bool $force, Carbon $date): array
+    {
+        /** @var PortfolioPriceCronjob $portfolioSync */
+        $portfolioSync = app(PortfolioPriceCronjob::class);
+        $portfolioSync->setForce($force);
+        $portfolioSync->setDate($date);
+
+        try {
+            $portfolioSync->fire();
+        } catch (FireflyException $e) {
+            return [
+                'job_fired'     => false,
+                'job_succeeded' => false,
+                'job_errored'   => true,
+                'message'       => $e->getMessage(),
+            ];
+        }
+
+        return [
+            'job_fired'     => $portfolioSync->jobFired,
+            'job_succeeded' => $portfolioSync->jobSucceeded,
+            'job_errored'   => $portfolioSync->jobErrored,
+            'message'       => $portfolioSync->message,
         ];
     }
 
