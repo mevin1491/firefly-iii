@@ -1440,3 +1440,31 @@ Route::group(
         //        Route::post('set-order/{bill}', ['uses' => 'Bill\IndexController@setOrder', 'as' => 'set-order']);
     }
 );
+
+// Portfolio Tracker.
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Portfolio', 'prefix' => 'portfolio', 'as' => 'portfolio.'],
+    static function (): void {
+        // Dashboard
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+
+        // Settings & Account management
+        Route::get('settings', ['uses' => 'AccountController@settings', 'as' => 'settings']);
+        Route::post('store', ['uses' => 'AccountController@store', 'as' => 'store']);
+        Route::delete('destroy/{portfolioAccount}', ['uses' => 'AccountController@destroy', 'as' => 'destroy']);
+
+        // Luno sync
+        Route::get('sync-luno/{portfolioAccount}', ['uses' => 'AccountController@syncLuno', 'as' => 'sync-luno']);
+
+        // CSV import
+        Route::get('import/{portfolioAccount}', ['uses' => 'AccountController@importForm', 'as' => 'import-form']);
+        Route::post('import-csv/{portfolioAccount}', ['uses' => 'AccountController@importCsv', 'as' => 'import-csv']);
+        Route::post('import-bridge-json/{portfolioAccount}', ['uses' => 'AccountController@importBridgeJson', 'as' => 'import-bridge-json']);
+
+        // Chart data endpoints
+        Route::get('chart/allocation-platform', ['uses' => 'ChartController@allocationByPlatform', 'as' => 'chart.allocation-platform']);
+        Route::get('chart/allocation-asset-type', ['uses' => 'ChartController@allocationByAssetType', 'as' => 'chart.allocation-asset-type']);
+        Route::get('chart/historical-value', ['uses' => 'ChartController@historicalValue', 'as' => 'chart.historical-value']);
+        Route::get('chart/top-holdings', ['uses' => 'ChartController@topHoldings', 'as' => 'chart.top-holdings']);
+    }
+);
