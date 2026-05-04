@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuraBlend – Pure Essential Oils & Aromatherapy</title>
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" />
+
+  <style>
+    /* ══════════════════════════════════════════
+       GLOBAL
+    ══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ivory:    #FAF8F4;
+      --sage:     #7B9E87;
+      --sage-dk:  #4E7260;
+      --sage-lt:  #C8DDD0;
+      --lavender: #9B72CF;
+      --lav-dk:   #6B48A8;
+      --gold:     #C8973A;
+      --charcoal: #2C2C2C;
+      --muted:    #6C757D;
+      --white:    #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--ivory);
+      color: var(--charcoal);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+    section { padding: 90px 0; }
+
+    .section-label {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .section-title {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--charcoal);
+      margin-bottom: 18px;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.75;
+    }
+
+    /* ── Buttons ── */
+    .btn-sage {
+      background: var(--sage);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 13px 34px;
+      font-weight: 600;
+      font-size: .95rem;
+      transition: background .2s, transform .15s;
+    }
+    .btn-sage:hover { background: var(--sage-dk); color: #fff; transform: translateY(-2px); }
+
+    .btn-outline-sage {
+      background: transparent;
+      color: var(--sage-dk);
+      border: 2px solid var(--sage);
+      border-radius: 50px;
+      padding: 11px 30px;
+      font-weight: 600;
+      font-size: .95rem;
+      transition: all .2s;
+    }
+    .btn-outline-sage:hover { background: var(--sage); color: #fff; }
+
+    /* ── Divider leaf ── */
+    .leaf-divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .leaf-divider::before, .leaf-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--sage-lt);
+    }
+
+
+    /* ══════════════════════════════════════════
+       NAVBAR
+    ══════════════════════════════════════════ */
+    .navbar-aurablend {
+      background: rgba(250, 248, 244, .95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(123,158,135,.18);
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: box-shadow .2s;
+    }
+    .navbar-aurablend.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+
+    .navbar-brand-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--sage-dk) !important;
+      letter-spacing: .02em;
+    }
+    .navbar-brand-text span { color: var(--gold); }
+
+    .nav-link-custom {
+      color: var(--charcoal) !important;
+      font-size: .9rem;
+      font-weight: 500;
+      padding: 6px 16px !important;
+      border-radius: 20px;
+      transition: background .15s, color .15s;
+    }
+    .nav-link-custom:hover { background: var(--sage-lt); color: var(--sage-dk) !important; }
+
+    .nav-cart-btn {
+      background: var(--sage);
+      color: #fff !important;
+      border-radius: 50px;
+      padding: 8px 20px !important;
+      font-weight: 600;
+      font-size: .88rem;
+      transition: background .2s;
+    }
+    .nav-cart-btn:hover { background: var(--sage-dk); }
+
+    .cart-count {
+      background: var(--gold);
+      color: #fff;
+      border-radius: 50%;
+      width: 18px; height: 18px;
+      font-size: .65rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+
+    /* ══════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════ */
+    .hero {
+      min-height: 88vh;
+      background: linear-gradient(135deg, #e8f0ea 0%, #f5f0e8 50%, #eee4f5 100%);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 60px 0;
+    }
+
+    /* decorative blobs */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, rgba(155,114,207,.18) 0%, transparent 70%);
+      top: -100px; right: -80px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, rgba(123,158,135,.22) 0%, transparent 70%);
+      bottom: -80px; left: -60px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(123,158,135,.15);
+      border: 1px solid rgba(123,158,135,.35);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--sage-dk);
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.13;
+      color: var(--charcoal);
+      margin-bottom: 20px;
+    }
+    .hero-title .highlight {
+      background: linear-gradient(135deg, var(--sage-dk), var(--lavender));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 500px;
+      margin-bottom: 38px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 36px;
+      margin-top: 44px;
+      flex-wrap: wrap;
+    }
+    .hero-stat .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--sage-dk);
+      line-height: 1;
+    }
+    .hero-stat .lbl {
+      font-size: .78rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 3px;
+    }
+
+    /* hero visual panel */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-circle {
+      width: 380px; height: 380px;
+      background: linear-gradient(145deg, rgba(123,158,135,.22), rgba(155,114,207,.18));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .hero-bottle {
+      font-size: 8rem;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,.12));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-14px); }
+    }
+
+    /* floating mini-cards */
+    .float-card {
+      position: absolute;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px 16px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.10);
+      font-size: .82rem;
+      font-weight: 600;
+      white-space: nowrap;
+      animation: float-alt 5s ease-in-out infinite;
+    }
+    .float-card.fc1 { top: 20px;  left: -20px; animation-delay: 0s; }
+    .float-card.fc2 { bottom: 40px; left: -30px; animation-delay: 1.2s; }
+    .float-card.fc3 { top: 40px;  right: -30px; animation-delay: .6s; }
+
+    @keyframes float-alt {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    .float-card i { margin-right: 6px; }
+
+
+    /* ══════════════════════════════════════════
+       BENEFITS STRIP
+    ══════════════════════════════════════════ */
+    .benefits-strip {
+      background: var(--sage-dk);
+      padding: 28px 0;
+    }
+    .benefit-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,.88);
+      font-size: .88rem;
+      font-weight: 500;
+    }
+    .benefit-chip i { color: var(--sage-lt); font-size: 1.1rem; }
+
+
+    /* ══════════════════════════════════════════
+       ABOUT / STORY
+    ══════════════════════════════════════════ */
+    .about-section { background: #fff; }
+
+    .about-img-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .about-img-main {
+      width: 100%;
+      max-width: 440px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, #c8ddd0, #e0d5f0);
+      aspect-ratio: 4/5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7rem;
+      box-shadow: 0 24px 60px rgba(0,0,0,.10);
+    }
+    .about-badge-card {
+      position: absolute;
+      bottom: 30px; right: -20px;
+      background: var(--white);
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 10px 32px rgba(0,0,0,.12);
+      min-width: 160px;
+    }
+    .about-badge-card .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--sage-dk);
+      line-height: 1;
+    }
+
+    .about-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .about-feature:last-child { border-bottom: none; }
+    .af-icon {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      background: var(--sage-lt);
+      color: var(--sage-dk);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+
+    /* ══════════════════════════════════════════
+       PRODUCTS
+    ══════════════════════════════════════════ */
+    .products-section { background: var(--ivory); }
+
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 44px;
+    }
+    .filter-tab {
+      border: 1px solid var(--sage-lt);
+      background: #fff;
+      color: var(--muted);
+      border-radius: 30px;
+      padding: 7px 20px;
+      font-size: .85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .filter-tab:hover, .filter-tab.active {
+      background: var(--sage);
+      border-color: var(--sage);
+      color: #fff;
+    }
+
+    /* product cards */
+    .prod-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
+      transition: transform .25s, box-shadow .25s;
+      height: 100%;
+      position: relative;
+    }
+    .prod-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 16px 44px rgba(0,0,0,.13);
+    }
+
+    .prod-card-img {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prod-card-img.lavender-bg  { background: linear-gradient(145deg, #c4a8ef, #9b72d0); }
+    .prod-card-img.mint-bg      { background: linear-gradient(145deg, #a8d8b4, #44c87a); }
+    .prod-card-img.teal-bg      { background: linear-gradient(145deg, #a0d4d8, #00838f); }
+    .prod-card-img.dark-bg      { background: linear-gradient(145deg, #2a5068, #0f2a38); }
+    .prod-card-img.rose-bg      { background: linear-gradient(145deg, #f8c4d0, #e87090); }
+    .prod-card-img.amber-bg     { background: linear-gradient(145deg, #f5d89a, #c8973a); }
+    .prod-card-img.pine-bg      { background: linear-gradient(145deg, #b0ccb0, #3a6e3a); }
+    .prod-card-img.citrus-bg    { background: linear-gradient(145deg, #ffe0a0, #f5a020); }
+
+    .prod-badge-top {
+      position: absolute;
+      top: 14px; left: 14px;
+      background: rgba(255,255,255,.92);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .prod-badge-top.new  { color: var(--sage-dk); }
+    .prod-badge-top.sale { color: #c0392b; }
+    .prod-badge-top.hot  { color: var(--gold); }
+
+    .wishlist-btn {
+      position: absolute;
+      top: 14px; right: 14px;
+      width: 34px; height: 34px;
+      background: rgba(255,255,255,.85);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .95rem;
+      color: #ccc;
+      cursor: pointer;
+      transition: color .2s, background .2s;
+    }
+    .wishlist-btn:hover, .wishlist-btn.active { color: #e87090; background: #fff; }
+
+    .prod-body { padding: 20px 22px 22px; }
+    .prod-category { font-size: .74rem; color: var(--sage); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 5px; }
+    .prod-name { font-family: 'Playfair Display', serif; font-size: 1.12rem; font-weight: 700; margin-bottom: 5px; color: var(--charcoal); }
+    .prod-desc { font-size: .82rem; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+    .prod-stars { color: #f5a623; font-size: .82rem; }
+    .prod-stars span { color: var(--muted); font-size: .78rem; margin-left: 4px; }
+
+    .prod-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #f2f2f2;
+    }
+    .prod-price { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; color: var(--charcoal); }
+    .prod-price .old { font-family: 'Inter', sans-serif; font-size: .82rem; color: #bbb; text-decoration: line-through; margin-left: 6px; font-weight: 400; }
+    .prod-price .vol { font-family: 'Inter', sans-serif; font-size: .75rem; color: var(--muted); font-weight: 400; display: block; }
+
+    .add-btn {
+      width: 40px; height: 40px;
+      background: var(--sage);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      flex-shrink: 0;
+    }
+    .add-btn:hover { background: var(--sage-dk); transform: scale(1.1); }
+
+
+    /* ══════════════════════════════════════════
+       HOW IT WORKS
+    ══════════════════════════════════════════ */
+    .how-section { background: #fff; }
+
+    .step-card {
+      text-align: center;
+      padding: 36px 28px;
+      border-radius: 20px;
+      background: var(--ivory);
+      border: 1px solid var(--sage-lt);
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .step-card:hover { box-shadow: 0 12px 36px rgba(0,0,0,.09); transform: translateY(-4px); }
+
+    .step-number {
+      position: absolute;
+      top: 16px; right: 18px;
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: rgba(123,158,135,.12);
+      line-height: 1;
+    }
+    .step-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--sage-lt), rgba(155,114,207,.2));
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 20px;
+      color: var(--sage-dk);
+    }
+    .step-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; color: var(--charcoal); }
+    .step-desc { font-size: .88rem; color: var(--muted); line-height: 1.68; }
+
+
+    /* ══════════════════════════════════════════
+       INGREDIENTS / QUALITY BANNER
+    ══════════════════════════════════════════ */
+    .quality-section {
+      background: linear-gradient(135deg, #1e4d38 0%, #2d6e54 50%, #1a3a4a 100%);
+      color: #fff;
+      padding: 80px 0;
+    }
+    .quality-section .section-label { color: var(--sage-lt); }
+    .quality-section .section-title { color: #fff; }
+    .quality-section .section-sub { color: rgba(255,255,255,.7); }
+
+    .quality-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 30px;
+      padding: 9px 18px;
+      font-size: .85rem;
+      font-weight: 500;
+      color: rgba(255,255,255,.9);
+      margin: 5px;
+      transition: background .2s;
+    }
+    .quality-pill:hover { background: rgba(255,255,255,.2); }
+    .quality-pill i { color: var(--sage-lt); }
+
+    .big-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--sage-lt);
+      line-height: 1;
+    }
+    .big-label { font-size: .8rem; color: rgba(255,255,255,.6); margin-top: 4px; }
+
+
+    /* ══════════════════════════════════════════
+       TESTIMONIALS
+    ══════════════════════════════════════════ */
+    .testi-section { background: var(--ivory); }
+
+    .testi-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px 28px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+      height: 100%;
+      position: relative;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .testi-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,.10); }
+
+    .testi-quote {
+      font-size: 3rem;
+      line-height: 1;
+      color: var(--sage-lt);
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 12px;
+    }
+    .testi-text {
+      font-size: .93rem;
+      color: #444;
+      line-height: 1.75;
+      margin-bottom: 22px;
+      font-style: italic;
+    }
+    .testi-avatar {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: var(--sage-lt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .testi-name { font-weight: 700; font-size: .9rem; color: var(--charcoal); }
+    .testi-role { font-size: .78rem; color: var(--muted); }
+    .testi-stars { color: #f5a623; font-size: .85rem; margin-bottom: 16px; }
+
+
+    /* ══════════════════════════════════════════
+       NEWSLETTER
+    ══════════════════════════════════════════ */
+    .newsletter-section {
+      background: linear-gradient(135deg, var(--lav-dk) 0%, var(--lavender) 60%, #b59ae0 100%);
+      padding: 80px 0;
+    }
+    .newsletter-section h2 { color: #fff; }
+    .newsletter-section p { color: rgba(255,255,255,.8); font-size: 1.05rem; }
+
+    .newsletter-form {
+      display: flex;
+      gap: 12px;
+      max-width: 480px;
+      margin: 32px auto 0;
+      flex-wrap: wrap;
+    }
+    .newsletter-form input {
+      flex: 1;
+      min-width: 220px;
+      border: none;
+      border-radius: 50px;
+      padding: 13px 22px;
+      font-size: .95rem;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .newsletter-form input::placeholder { color: #aaa; }
+    .btn-newsletter {
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 13px 28px;
+      font-weight: 700;
+      font-size: .93rem;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .btn-newsletter:hover { background: #b07d2e; transform: translateY(-1px); }
+
+    .nl-perks { display: flex; justify-content: center; gap: 28px; margin-top: 22px; flex-wrap: wrap; }
+    .nl-perk { display: flex; align-items: center; gap: 7px; font-size: .82rem; color: rgba(255,255,255,.75); }
+    .nl-perk i { color: rgba(255,255,255,.55); }
+
+
+    /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+    .footer {
+      background: #1a1a1a;
+      color: rgba(255,255,255,.75);
+      padding: 64px 0 0;
+    }
+    .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .footer-brand span { color: var(--gold); }
+    .footer-tagline { font-size: .88rem; color: rgba(255,255,255,.45); margin-top: 8px; line-height: 1.6; max-width: 240px; }
+
+    .footer-heading { font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 18px; }
+    .footer-link { display: block; color: rgba(255,255,255,.65); font-size: .88rem; margin-bottom: 10px; text-decoration: none; transition: color .15s; }
+    .footer-link:hover { color: var(--sage-lt); }
+
+    .social-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.15);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.6);
+      font-size: .9rem;
+      text-decoration: none;
+      transition: background .2s, color .2s, border-color .2s;
+      margin-right: 8px;
+    }
+    .social-btn:hover { background: var(--sage); border-color: var(--sage); color: #fff; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding: 20px 0;
+      margin-top: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p { font-size: .82rem; color: rgba(255,255,255,.35); margin: 0; }
+
+    .payment-badge {
+      display: inline-flex; align-items: center;
+      background: rgba(255,255,255,.07);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: .75rem;
+      color: rgba(255,255,255,.45);
+      margin-left: 6px;
+    }
+
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE TWEAKS
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      section { padding: 64px 0; }
+      .hero { min-height: auto; padding: 60px 0 40px; }
+      .hero-circle { width: 260px; height: 260px; }
+      .hero-bottle { font-size: 5.5rem; }
+      .float-card { display: none; }
+      .hero-stats { gap: 24px; }
+      .about-img-main { max-width: 280px; font-size: 4.5rem; }
+      .about-badge-card { right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════
+       NAVBAR
+  ════════════════════════════════════════ -->
+  <nav class="navbar-aurablend" id="navbar">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between w-100">
+
+        <!-- Brand -->
+        <a href="#" class="navbar-brand-text text-decoration-none">
+          Aura<span>Blend</span>
+        </a>
+
+        <!-- Desktop nav -->
+        <ul class="nav d-none d-lg-flex align-items-center gap-1">
+          <li><a href="#products" class="nav-link-custom">Shop</a></li>
+          <li><a href="#about"    class="nav-link-custom">Our Story</a></li>
+          <li><a href="#how"      class="nav-link-custom">How It Works</a></li>
+          <li><a href="#reviews"  class="nav-link-custom">Reviews</a></li>
+        </ul>
+
+        <!-- Actions -->
+        <div class="d-flex align-items-center gap-2">
+          <a href="#" class="nav-link-custom d-none d-md-flex align-items-center">
+            <i class="fa-regular fa-user me-1"></i> Account
+          </a>
+          <a href="#" class="nav-link-custom nav-cart-btn d-flex align-items-center">
+            <i class="fa-solid fa-bag-shopping me-1"></i> Cart
+            <span class="cart-count">3</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════ -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="row align-items-center gy-5">
+
+        <!-- Copy -->
+        <div class="col-lg-6">
+          <div class="hero-badge">
+            <i class="fa-solid fa-leaf"></i>
+            100% Pure &amp; Certified Organic
+          </div>
+
+          <h1 class="hero-title">
+            Nature's Essence,<br>
+            <span class="highlight">Bottled for You</span>
+          </h1>
+
+          <p class="hero-sub">
+            Premium essential oils cold-pressed and steam-distilled from the world's finest botanicals.
+            Elevate your wellness rituals with every drop.
+          </p>
+
+          <div class="d-flex flex-wrap gap-3">
+            <a href="#products" class="btn btn-sage">
+              <i class="fa-solid fa-spa me-2"></i>Shop Collection
+            </a>
+            <a href="#how" class="btn btn-outline-sage">
+              <i class="fa-regular fa-play-circle me-2"></i>How It Works
+            </a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="num">50+</div>
+              <div class="lbl">Unique blends</div>
+            </div>
+            <div class="hero-stat">
+              <div class="num">28k</div>
+              <div class="lbl">Happy customers</div>
+            </div>
+            <div class="hero-stat">
+              <div class="num">4.9★</div>
+              <div class="lbl">Average rating</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual -->
+        <div class="col-lg-6 hero-visual">
+          <div class="hero-circle">
+            <div class="hero-bottle">🌿</div>
+
+            <!-- floating mini cards -->
+            <div class="float-card fc1">
+              <i class="fa-solid fa-droplet" style="color:#9b72d0;"></i> Lavender · Provence
+            </div>
+            <div class="float-card fc2">
+              <i class="fa-solid fa-star" style="color:#f5a623;"></i> Best Seller 2024
+            </div>
+            <div class="float-card fc3">
+              <i class="fa-solid fa-shield-halved" style="color:#7b9e87;"></i> GC/MS Certified
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       BENEFITS STRIP
+  ════════════════════════════════════════ -->
+  <div class="benefits-strip">
+    <div class="container">
+      <div class="row g-3 text-center text-md-start justify-content-around">
+        <div class="col-6 col-md-auto">
+          <div class="benefit-chip justify-content-center justify-content-md-start">
+            <i class="fa-solid fa-seedling"></i> 100% Organic
+          </div>
+        </div>
+        <div class="col-6 col-md-auto">
+          <div class="benefit-chip justify-content-center justify-content-md-start">
+            <i class="fa-solid fa-flask-vial"></i> GC/MS Lab Tested
+          </div>
+        </div>
+        <div class="col-6 col-md-auto">
+          <div class="benefit-chip justify-content-center justify-content-md-start">
+            <i class="fa-solid fa-box-open"></i> Eco Packaging
+          </div>
+        </div>
+        <div class="col-6 col-md-auto">
+          <div class="benefit-chip justify-content-center justify-content-md-start">
+            <i class="fa-solid fa-truck-fast"></i> Free Shipping $40+
+          </div>
+        </div>
+        <div class="col-6 col-md-auto">
+          <div class="benefit-chip justify-content-center justify-content-md-start">
+            <i class="fa-solid fa-rotate-left"></i> 30-Day Returns
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════
+       ABOUT / OUR STORY
+  ════════════════════════════════════════ -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="row align-items-center gy-5">
+
+        <!-- Image panel -->
+        <div class="col-lg-5 text-center position-relative">
+          <div class="about-img-wrap d-inline-block">
+            <div class="about-img-main mx-auto">🌾</div>
+            <div class="about-badge-card">
+              <div class="num">15+</div>
+              <div style="font-size:.78rem;color:var(--muted);margin-top:3px;">Years of craft</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Copy -->
+        <div class="col-lg-6 offset-lg-1">
+          <span class="section-label">Our Story</span>
+          <h2 class="section-title">Rooted in nature,<br>refined by science</h2>
+          <p class="section-sub mb-4">
+            AuraBlend was born from a simple belief: what you put on your body should be as pure as what you put in it.
+            We partner with small family farms across France, Australia, and India to bring you oils of uncompromising quality.
+          </p>
+
+          <div class="about-feature">
+            <div class="af-icon"><i class="fa-solid fa-earth-americas"></i></div>
+            <div>
+              <div style="font-weight:700;margin-bottom:4px;">Ethically Sourced</div>
+              <div style="font-size:.88rem;color:var(--muted);">We work directly with farmers, ensuring fair wages and sustainable harvesting.</div>
+            </div>
+          </div>
+          <div class="about-feature">
+            <div class="af-icon"><i class="fa-solid fa-microscope"></i></div>
+            <div>
+              <div style="font-weight:700;margin-bottom:4px;">Third-Party Tested</div>
+              <div style="font-size:.88rem;color:var(--muted);">Every batch is independently verified via GC/MS chromatography analysis.</div>
+            </div>
+          </div>
+          <div class="about-feature">
+            <div class="af-icon"><i class="fa-solid fa-recycle"></i></div>
+            <div>
+              <div style="font-weight:700;margin-bottom:4px;">Sustainable Always</div>
+              <div style="font-size:.88rem;color:var(--muted);">Glass bottles, biodegradable packaging, carbon-offset shipping.</div>
+            </div>
+          </div>
+
+          <a href="#products" class="btn btn-sage mt-4">
+            <i class="fa-solid fa-arrow-right me-2"></i>Explore Products
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       PRODUCTS
+  ════════════════════════════════════════ -->
+  <section class="products-section" id="products">
+    <div class="container">
+
+      <div class="text-center mb-5">
+        <span class="section-label">Our Collection</span>
+        <h2 class="section-title">Pure oils for every mood</h2>
+        <p class="section-sub mx-auto">
+          From calming lavender to energising citrus — each oil is carefully selected, tested, and bottled at its peak potency.
+        </p>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs justify-content-center">
+        <button class="filter-tab active" onclick="filterTab(this,'all')">All Oils</button>
+        <button class="filter-tab" onclick="filterTab(this,'floral')">Floral</button>
+        <button class="filter-tab" onclick="filterTab(this,'herbal')">Herbal</button>
+        <button class="filter-tab" onclick="filterTab(this,'citrus')">Citrus</button>
+        <button class="filter-tab" onclick="filterTab(this,'woody')">Woody</button>
+      </div>
+
+      <div class="row g-4" id="products-grid">
+
+        <!-- ── CARD 1 – Lavender Serenity ── -->
+        <div class="col-xl-3 col-lg-4 col-md-6 product-item floral">
+          <div class="prod-card">
+            <div class="prod-card-img lavender-bg">
+              <span class="prod-badge-top new">New</span>
+              <button class="wishlist-btn" onclick="toggleWish(this)"><i class="fa-regular fa-heart"></i></button>
+              💜
+            </div>
+            <div class="prod-body">
+              <div class="prod-category">Floral · Calming</div>
+              <div class="prod-name">Lavender Serenity</div>
+              <div class="prod-desc">Pure lavender from Provence, France. Ideal for sleep, stress relief, and relaxation rituals.</div>
+              <div class="prod-stars">★★★★★ <span>(284 reviews)</span></div>
+              <div class="prod-footer">
+                <div class="prod-price">
+                  $24.99 <span class="old">$31.99</span>
+                  <span class="vol">10 mL · Therapeutic Grade</span>
+                </div>
+                <button class="add-btn" onclick="addCart(this)" title="Add to cart">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CARD 2 – Peppermint Fresh ── -->
+        <div class="col-xl-3 col-lg-4 col-md-6 product-item herbal">
+          <div class="prod-card">
+            <div class="prod-card-img mint-bg">
+              <span class="prod-badge-top hot">Best Seller</span>
+              <button class="wishlist-btn" onclick="toggleWish(this)"><i class="fa-regular fa-heart"></i></button>
+              🌿
+            </div>
+            <div class="prod-body">
+              <div class="prod-category">Herbal · Energising</div>
+              <div class="prod-name">Peppermint Fresh</div>
+              <div class="prod-desc">Crisp and invigorating. Sharpen focus, ease headaches, and kick-start your mornings.</div>
+              <div class="prod-stars">★★★★☆ <span>(197 reviews)</span></div>
+              <div class="prod-footer">
+                <div class="prod-price">
+                  $19.50
+                  <span class="vol">10 mL · 100% Pure</span>
+                </div>
+                <button class="add-btn" onclick="addCart(this)" title="Add to cart">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CARD 3 – Tea Tree Pure ── -->
+        <div class="col-xl-3 col-lg-4 col-md-6 product-item herbal">
+          <div class="prod-card">
+            <div class="prod-card-img teal-bg">
+              <button class="wishlist-btn" onclick="toggleWish(this)"><i class="fa-regular fa-heart"></i></button>
+              🍃
+            </div>
+            <div class="prod-body">
+              <div class="prod-category">Herbal · Cleansing</div>
+              <div class="prod-name">Tea Tree Pure</div>
+              <div class="prod-desc">Cold-pressed from Australia. Naturally antibacterial, antifungal, and antiviral — a must-have.</div>
+              <div class="prod-stars">★★★★★ <span>(412 reviews)</span></div>
+              <div class="prod-footer">
+                <div class="prod-price">
+                  $16.75
+                  <span class="vol">15 mL · Cold-Pressed</span>
+                </div>
+                <button class="add-btn" onclick="addCart(this)" title="Add to cart">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CARD 4 – Eucalyptus Gold ── -->
+        <div class="col-xl-3 col-lg-4 col-md-6 product-item herbal woody">
+          <div class="prod-card">
+            <div class="prod-card-img dark-bg">
+              <span class="prod-badge-top" style="color:#c9a227;">Premium</span>
+              <button class="wishlist-btn" onclick="toggleWish(this)"><i class="fa-regular fa-heart"></i></button>
+              🌲
+            </div>
+            <div class="prod-body">
+              <div class="prod-category">Woody · Therapeutic</div>
+              <div class="prod-name">Eucalyptus Gold</div>
+              <div class="prod-desc">Reserve-grade, triple-distilled from Tasmania. USDA Organic, GC/MS tested for peak potency.</div>
+              <div class="prod-stars">★★★★★ <span>(89 reviews)</span></div>
+              <div class="prod-footer">
+                <div class="prod-price">
+                  $48.00
+                  <span class="vol">30 mL · Reserve Batch</span>
+                </div>
+                <button class="add-btn" onclick="addCart(this)" title="Add to cart">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CARD 5 – Rose Absolute ── -->
+        <div class="col-xl-3 col-lg-4 col-md-6 product-item floral">
+          <div class="prod-card">
+            <div class="prod-card-img rose-bg">
+              <span class="prod-badge-top sale">Sale</span>
+              <button class="wishlist-btn" onclick="toggleWish(this)"><i class="fa-regular fa-heart"></i></button>
+              🌹
+            </div>
+            <div class="prod-body">
+              <div class="prod-category">Floral · Romantic</div>
+              <div class="prod-name">Rose Absolute</div>
+              <div class="prod-desc">Steam-distilled from hand-picked Bulgarian roses. A deeply floral, emotionally uplifting blend.</div>
+              <div class="prod-stars">★★★★★ <span>(156 reviews)</span></div>
+              <div class="prod-footer">
+                <div class="prod-price">
+                  $34.00 <span class="old">$44.00</span>
+                  <span class="vol">5 mL · Steam Distilled</span>
+                </div>
+                <button class="add-btn" onclick="addCart(this)" title="Add to cart">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CARD 6 – Sweet Orange ── -->
+        <div class="col-xl-3 col-lg-4 col-md-6 product-item citrus">
+          <div class="prod-card">
+            <div class="prod-card-img citrus-bg">
+              <span class="prod-badge-top new">New</span>
+              <button class="wishlist-btn" onclick="toggleWish(this)"><i class="fa-regular fa-heart"></i></button>
+              🍊
+            </div>
+            <div class="prod-body">
+              <div class="prod-category">Citrus · Uplifting</div>
+              <div class="prod-name">Sweet Orange</div>
+              <div class="prod-desc">Cold-pressed citrus peel from Sicily. Bright, cheerful, mood-lifting — perfect for diffusers.</div>
+              <div class="prod-stars">★★★★☆ <span>(223 reviews)</span></div>
+              <div class="prod-footer">
+                <div class="prod-price">
+                  $12.99
+                  <span class="vol">15 mL · Cold-Pressed</span>
+                </div>
+                <button class="add-btn" onclick="addCart(this)" title="Add to cart">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CARD 7 – Frankincense ── -->
+        <div class="col-xl-3 col-lg-4 col-md-6 product-item woody">
+          <div class="prod-card">
+            <div class="prod-card-img amber-bg">
+              <span class="prod-badge-top hot">Popular</span>
+              <button class="wishlist-btn" onclick="toggleWish(this)"><i class="fa-regular fa-heart"></i></button>
+              🪵
+            </div>
+            <div class="prod-body">
+              <div class="prod-category">Woody · Grounding</div>
+              <div class="prod-name">Frankincense Sacred</div>
+              <div class="prod-desc">Ancient resin oil from Oman. Deeply grounding, anti-inflammatory, and perfect for meditation.</div>
+              <div class="prod-stars">★★★★★ <span>(341 reviews)</span></div>
+              <div class="prod-footer">
+                <div class="prod-price">
+                  $38.50
+                  <span class="vol">10 mL · Resin Distilled</span>
+                </div>
+                <button class="add-btn" onclick="addCart(this)" title="Add to cart">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CARD 8 – Cedar & Pine ── -->
+        <div class="col-xl-3 col-lg-4 col-md-6 product-item woody">
+          <div class="prod-card">
+            <div class="prod-card-img pine-bg">
+              <button class="wishlist-btn" onclick="toggleWish(this)"><i class="fa-regular fa-heart"></i></button>
+              🌲
+            </div>
+            <div class="prod-body">
+              <div class="prod-category">Woody · Fresh</div>
+              <div class="prod-name">Cedar &amp; Pine Blend</div>
+              <div class="prod-desc">A forest-inspired blend of cedarwood and Scots pine. Clean, woody, and deeply refreshing.</div>
+              <div class="prod-stars">★★★★☆ <span>(118 reviews)</span></div>
+              <div class="prod-footer">
+                <div class="prod-price">
+                  $22.00
+                  <span class="vol">15 mL · Blend</span>
+                </div>
+                <button class="add-btn" onclick="addCart(this)" title="Add to cart">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /products-grid -->
+
+      <div class="text-center mt-5">
+        <a href="#" class="btn btn-outline-sage">
+          <i class="fa-solid fa-grid-2 me-2"></i>View Full Catalogue
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       HOW IT WORKS
+  ════════════════════════════════════════ -->
+  <section class="how-section" id="how">
+    <div class="container">
+
+      <div class="text-center mb-5">
+        <span class="section-label">The Process</span>
+        <h2 class="section-title">From plant to bottle,<br>nothing is compromised</h2>
+      </div>
+
+      <div class="row g-4">
+
+        <div class="col-lg-3 col-md-6">
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <div class="step-icon"><i class="fa-solid fa-seedling"></i></div>
+            <div class="step-title">Ethical Harvesting</div>
+            <div class="step-desc">We partner with family farms who harvest plants at peak bloom using traditional, sustainable methods.</div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <div class="step-icon"><i class="fa-solid fa-fire-flame-curved"></i></div>
+            <div class="step-title">Steam Distillation</div>
+            <div class="step-desc">Low-pressure steam gently extracts the oil without heat damage, preserving every therapeutic compound.</div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="step-card">
+            <div class="step-number">03</div>
+            <div class="step-icon"><i class="fa-solid fa-microscope"></i></div>
+            <div class="step-title">Lab Verification</div>
+            <div class="step-desc">Each batch is tested by an independent lab using GC/MS analysis to verify purity and potency.</div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="step-card">
+            <div class="step-number">04</div>
+            <div class="step-icon"><i class="fa-solid fa-bottle-droplet"></i></div>
+            <div class="step-title">Glass-Bottled &amp; Shipped</div>
+            <div class="step-desc">Bottled in UV-protective amber glass and shipped in recycled packaging — carbon-offset to your door.</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       QUALITY BANNER
+  ════════════════════════════════════════ -->
+  <section class="quality-section">
+    <div class="container">
+      <div class="row align-items-center gy-5">
+
+        <div class="col-lg-5">
+          <span class="section-label">Quality Commitment</span>
+          <h2 class="section-title" style="color:#fff;">Every guarantee<br>you need</h2>
+          <p class="section-sub mb-4" style="color:rgba(255,255,255,.7);">
+            We don't cut corners. Every oil carries our full quality promise — or your money back.
+          </p>
+          <a href="#products" class="btn btn-sage">
+            <i class="fa-solid fa-check-double me-2"></i>Shop Certified Oils
+          </a>
+        </div>
+
+        <div class="col-lg-6 offset-lg-1">
+          <div class="row g-4 mb-4">
+            <div class="col-4 text-center">
+              <div class="big-number">99.8%</div>
+              <div class="big-label">Avg. Purity</div>
+            </div>
+            <div class="col-4 text-center">
+              <div class="big-number">50+</div>
+              <div class="big-label">Source Countries</div>
+            </div>
+            <div class="col-4 text-center">
+              <div class="big-number">28k+</div>
+              <div class="big-label">Customers</div>
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap">
+            <span class="quality-pill"><i class="fa-solid fa-certificate"></i> USDA Organic</span>
+            <span class="quality-pill"><i class="fa-solid fa-flask"></i> GC/MS Tested</span>
+            <span class="quality-pill"><i class="fa-solid fa-ban"></i> No Additives</span>
+            <span class="quality-pill"><i class="fa-solid fa-paw"></i> Cruelty-Free</span>
+            <span class="quality-pill"><i class="fa-solid fa-leaf"></i> Vegan</span>
+            <span class="quality-pill"><i class="fa-solid fa-recycle"></i> Eco Packaging</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       TESTIMONIALS
+  ════════════════════════════════════════ -->
+  <section class="testi-section" id="reviews">
+    <div class="container">
+
+      <div class="text-center mb-5">
+        <span class="section-label">Customer Love</span>
+        <h2 class="section-title">Trusted by wellness enthusiasts</h2>
+        <p class="section-sub mx-auto">Real stories from our community of over 28,000 happy customers.</p>
+      </div>
+
+      <div class="row g-4">
+
+        <div class="col-lg-4 col-md-6">
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">
+              The Lavender Serenity oil has completely transformed my bedtime routine.
+              I fall asleep within minutes and wake up genuinely refreshed. Nothing else compares.
+            </p>
+            <div class="d-flex align-items-center gap-3">
+              <div class="testi-avatar">😊</div>
+              <div>
+                <div class="testi-name">Sarah M.</div>
+                <div class="testi-role">Yoga Instructor, London</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">
+              As a massage therapist I've tried dozens of brands. AuraBlend's Tea Tree is the purest
+              I've ever used. No synthetic smell, just clean, potent oil.
+            </p>
+            <div class="d-flex align-items-center gap-3">
+              <div class="testi-avatar">🙆</div>
+              <div>
+                <div class="testi-name">James K.</div>
+                <div class="testi-role">Massage Therapist, Melbourne</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">
+              Eucalyptus Gold is worth every penny. I diffuse it during meditation and the depth of
+              aroma is extraordinary. Will never go back to another brand.
+            </p>
+            <div class="d-flex align-items-center gap-3">
+              <div class="testi-avatar">🧘</div>
+              <div>
+                <div class="testi-name">Priya R.</div>
+                <div class="testi-role">Wellness Coach, Toronto</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       NEWSLETTER
+  ════════════════════════════════════════ -->
+  <section class="newsletter-section" id="newsletter">
+    <div class="container text-center">
+      <span class="section-label" style="color:rgba(255,255,255,.6);">Stay Connected</span>
+      <h2 class="section-title" style="color:#fff;font-size:clamp(1.8rem,3vw,2.5rem);">
+        Unlock 15% off your first order
+      </h2>
+      <p style="color:rgba(255,255,255,.8);font-size:1rem;max-width:460px;margin:12px auto 0;">
+        Join our newsletter for exclusive blends, wellness guides, and early access to new arrivals.
+      </p>
+
+      <form class="newsletter-form mx-auto" onsubmit="handleNL(event)">
+        <input type="email" placeholder="Enter your email address" required />
+        <button type="submit" class="btn-newsletter">
+          <i class="fa-solid fa-paper-plane me-2"></i>Subscribe
+        </button>
+      </form>
+
+      <div class="nl-perks">
+        <span class="nl-perk"><i class="fa-solid fa-lock"></i> No spam, ever</span>
+        <span class="nl-perk"><i class="fa-solid fa-tag"></i> 15% welcome discount</span>
+        <span class="nl-perk"><i class="fa-solid fa-envelope-open-text"></i> Weekly wellness tips</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row gy-5">
+
+        <!-- Brand col -->
+        <div class="col-lg-4">
+          <div class="footer-brand">Aura<span>Blend</span></div>
+          <p class="footer-tagline">
+            Pure essential oils for a balanced life. Nature's wisdom, science-verified, ethically sourced.
+          </p>
+          <div class="mt-4">
+            <a href="#" class="social-btn"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="social-btn"><i class="fa-brands fa-pinterest"></i></a>
+            <a href="#" class="social-btn"><i class="fa-brands fa-tiktok"></i></a>
+          </div>
+        </div>
+
+        <!-- Shop -->
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Shop</div>
+          <a href="#" class="footer-link">All Oils</a>
+          <a href="#" class="footer-link">Floral</a>
+          <a href="#" class="footer-link">Herbal</a>
+          <a href="#" class="footer-link">Citrus</a>
+          <a href="#" class="footer-link">Woody</a>
+          <a href="#" class="footer-link">Gift Sets</a>
+        </div>
+
+        <!-- Help -->
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Help</div>
+          <a href="#" class="footer-link">Shipping Info</a>
+          <a href="#" class="footer-link">Returns</a>
+          <a href="#" class="footer-link">FAQ</a>
+          <a href="#" class="footer-link">Track Order</a>
+          <a href="#" class="footer-link">Contact Us</a>
+        </div>
+
+        <!-- Learn -->
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Learn</div>
+          <a href="#" class="footer-link">How to Use</a>
+          <a href="#" class="footer-link">Safety Guide</a>
+          <a href="#" class="footer-link">Blog</a>
+          <a href="#" class="footer-link">Lab Reports</a>
+          <a href="#" class="footer-link">Sustainability</a>
+        </div>
+
+        <!-- Contact -->
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Contact</div>
+          <a href="mailto:hello@aurablend.com" class="footer-link">
+            <i class="fa-solid fa-envelope me-2" style="color:var(--sage);"></i>hello@aurablend.com
+          </a>
+          <a href="tel:+18001234567" class="footer-link">
+            <i class="fa-solid fa-phone me-2" style="color:var(--sage);"></i>+1 800 123 4567
+          </a>
+          <div class="footer-link" style="cursor:default;">
+            <i class="fa-solid fa-clock me-2" style="color:var(--sage);"></i>Mon–Fri, 9am–6pm
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="footer-bottom">
+        <p>© 2024 AuraBlend. All rights reserved.</p>
+        <div class="d-flex align-items-center flex-wrap gap-2">
+          <a href="#" class="footer-link mb-0" style="font-size:.78rem;">Privacy Policy</a>
+          <span style="color:rgba(255,255,255,.2);">·</span>
+          <a href="#" class="footer-link mb-0" style="font-size:.78rem;">Terms of Service</a>
+          <span class="payment-badge"><i class="fa-brands fa-cc-visa me-1"></i>Visa</span>
+          <span class="payment-badge"><i class="fa-brands fa-cc-mastercard me-1"></i>MC</span>
+          <span class="payment-badge"><i class="fa-brands fa-cc-paypal me-1"></i>PayPal</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- ════════════════════════════════════════
+       SCRIPTS
+  ════════════════════════════════════════ -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    /* Navbar scroll shadow */
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    /* Wishlist toggle */
+    function toggleWish(btn) {
+      btn.classList.toggle('active');
+      const icon = btn.querySelector('i');
+      icon.classList.toggle('fa-regular');
+      icon.classList.toggle('fa-solid');
+    }
+
+    /* Add to cart feedback */
+    let cartCount = 3;
+    function addCart(btn) {
+      cartCount++;
+      document.querySelector('.cart-count').textContent = cartCount;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+      btn.style.background = 'var(--sage-dk)';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fa-solid fa-plus"></i>';
+        btn.style.background = '';
+      }, 1400);
+    }
+
+    /* Filter tabs */
+    function filterTab(el, category) {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.querySelectorAll('.product-item').forEach(item => {
+        const show = category === 'all' || item.classList.contains(category);
+        item.style.display = show ? '' : 'none';
+      });
+    }
+
+    /* Newsletter submit */
+    function handleNL(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Subscribed!';
+      btn.style.background = '#4E7260';
+      e.target.querySelector('input').value = '';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>Subscribe';
+        btn.style.background = '';
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
