@@ -5,8 +5,8 @@
     "dockerfile": "Dockerfile",
     "context": ".."
   },
-  "install": ".cursor/scripts/install.sh",
-  "start": ".cursor/scripts/start.sh",
+  "install": "bash .cursor/scripts/install.sh",
+  "start": "bash .cursor/scripts/start.sh",
   "ports": [
     {
       "name": "web",
