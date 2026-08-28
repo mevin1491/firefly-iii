@@ -14,12 +14,12 @@ if [[ ! -f .env ]]; then
   sed -i 's/^DB_HOST=db/DB_HOST=127.0.0.1/' .env
 fi
 
+composer install --no-interaction --prefer-dist
+npm ci
+
 if ! grep -qE '^APP_KEY=base64:' .env; then
   php artisan key:generate --force --no-interaction
 fi
-
-composer install --no-interaction --prefer-dist
-npm ci
 
 if ! mysql -u firefly -psecret_firefly_password firefly -e "SHOW TABLES LIKE 'migrations'" 2>/dev/null | grep -q migrations; then
   php artisan firefly-iii:upgrade-database --no-interaction
