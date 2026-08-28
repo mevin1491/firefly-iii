@@ -15,6 +15,12 @@ composer install --no-interaction --no-progress
 echo "==> Installing Node dependencies (applies patch-package patches)"
 npm ci --no-audit --no-fund
 
+echo "==> Building v1 frontend assets (Laravel Mix)"
+npm run production --workspace=v1
+
+echo "==> Building v2 frontend assets (Vite)"
+npm run build --workspace=v2
+
 echo "==> Preparing .env (local SQLite development configuration)"
 if [ ! -f .env ]; then
     cp .env.example .env
