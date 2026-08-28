@@ -12,7 +12,7 @@ return new class () extends Migration {
         Schema::create('portfolio_accounts', static function (Blueprint $table): void {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('user_group_id');
+            $table->unsignedBigInteger('user_group_id');
             $table->string('name', 255);
             $table->string('platform', 50);
             $table->boolean('active')->default(true);
