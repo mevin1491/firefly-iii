@@ -1371,3 +1371,28 @@ Breadcrumbs::for(
         $breadcrumbs->push(trans('firefly.edit_administration_breadcrumb', ['title' => limitStringLength($userGroup->title)]), route('administrations.edit', [$userGroup->id]));
     }
 );
+
+// Portfolio Tracker breadcrumbs
+Breadcrumbs::for(
+    'portfolio.index',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push('Portfolio Tracker', route('portfolio.index'));
+    }
+);
+
+Breadcrumbs::for(
+    'portfolio.settings',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('portfolio.index');
+        $breadcrumbs->push('Settings', route('portfolio.settings'));
+    }
+);
+
+Breadcrumbs::for(
+    'portfolio.import',
+    static function (Generator $breadcrumbs, \FireflyIII\Models\PortfolioAccount $account): void {
+        $breadcrumbs->parent('portfolio.settings');
+        $breadcrumbs->push('Import — ' . $account->name, route('portfolio.import-form', [$account->id]));
+    }
+);

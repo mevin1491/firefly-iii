@@ -186,6 +186,13 @@
         </a>
     </li>
 
+    <li class="{{ activeRoutePartial('portfolio') }}" id="portfolio-menu">
+        <a href="{{ route('portfolio.index') }}">
+            <em class="fa fa-line-chart fa-fw"></em>
+            <span>Portfolio Tracker</span>
+        </a>
+    </li>
+
 
     {% if config('firefly.feature_flags.export') %}
         <li class="{{ activeRoutePartial('export') }}" id="report-menu">

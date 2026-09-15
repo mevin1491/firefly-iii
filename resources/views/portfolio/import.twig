@@ -1,0 +1,127 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render('portfolio.import', portfolioAccount) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        Import CSV &mdash;
+                        {% if portfolioAccount.platform == 'moomoo' %}
+                            <span class="label label-warning">Moomoo</span>
+                        {% elseif portfolioAccount.platform == 'fsmone' %}
+                            <span class="label label-info">FSMOne</span>
+                        {% endif %}
+                        {{ portfolioAccount.name }}
+                    </h3>
+                </div>
+                <form action="{{ route('portfolio.import-csv', [portfolioAccount.id]) }}" method="POST"
+                      enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="import_type">Import Type</label>
+                            <select name="import_type" id="import_type" class="form-control">
+                                <option value="holdings">Portfolio Holdings (current positions)</option>
+                                <option value="transactions">Transaction History (trades)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="csv_file">CSV File</label>
+                            <input type="file" name="csv_file" id="csv_file" class="form-control" accept=".csv,.txt"
+                                   required>
+                            <p class="help-block">
+                                Upload a CSV file exported from {{ portfolioAccount.platform|capitalize }}.
+                                Maximum file size: 10 MB.
+                            </p>
+                        </div>
+
+                        {% if portfolioAccount.platform == 'moomoo' %}
+                            <div class="callout callout-info">
+                                <h4>Expected CSV Format</h4>
+                                <p><strong>For Holdings:</strong> Symbol, Name, Qty, Avg Cost, Market Price, Market Value, Cost, P/L, P/L%</p>
+                                <p><strong>For Transactions:</strong> Date, Symbol, Name, Side (Buy/Sell), Qty, Price, Amount, Fee</p>
+                                <p class="text-muted">Column names are matched flexibly &mdash; common variations are supported.</p>
+                            </div>
+                        {% endif %}
+
+                        {% if portfolioAccount.platform == 'fsmone' %}
+                            <div class="callout callout-info">
+                                <h4>Expected CSV Format</h4>
+                                <p><strong>For Holdings:</strong> Fund Name, Fund Code/ISIN, Units, NAV Price, Market Value, Cost, Gain/Loss</p>
+                                <p><strong>For Transactions:</strong> Date, Fund Name, Fund Code, Type (Buy/Sell/Dividend), Units, NAV Price, Amount, Fee</p>
+                                <p class="text-muted">Column names are matched flexibly &mdash; common variations are supported.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="box-footer">
+                        <a href="{{ route('portfolio.settings') }}" class="btn btn-default">
+                            <span class="fa fa-arrow-left"></span> Back
+                        </a>
+                        <button type="submit" class="btn btn-primary pull-right">
+                            <span class="fa fa-upload"></span> Import
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {% if portfolioAccount.platform == 'moomoo' %}
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Import from FutuOpenD Bridge (JSON)</h3>
+                    </div>
+                    <form action="{{ route('portfolio.import-bridge-json', [portfolioAccount.id]) }}" method="POST"
+                          enctype="multipart/form-data">
+                        {{ csrf_field() }}
+                        <div class="box-body">
+                            <p>
+                                If you run a Python bridge script that queries FutuOpenD and outputs JSON,
+                                upload the JSON file here.
+                            </p>
+                            <div class="form-group">
+                                <label for="json_file">JSON File</label>
+                                <input type="file" name="json_file" id="json_file" class="form-control" accept=".json,.txt"
+                                       required>
+                            </div>
+                            <div class="callout callout-warning">
+                                <h4>Bridge Script</h4>
+                                <p>
+                                    The JSON file should contain a <code>positions</code> array. Example format:
+                                </p>
+                                <pre>{
+  "positions": [
+    {
+      "code": "US.AAPL",
+      "stock_name": "Apple Inc",
+      "qty": 100,
+      "cost_price": 150.00,
+      "market_val": 17500.00,
+      "pl_val": 2500.00,
+      "pl_ratio": 0.1667,
+      "currency": "USD"
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-warning pull-right">
+                                <span class="fa fa-upload"></span> Import JSON
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block styles %}
+{% endblock %}

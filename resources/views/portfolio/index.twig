@@ -1,0 +1,285 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render('portfolio.index') }}
+{% endblock %}
+
+{% block content %}
+    {# SUMMARY BOXES #}
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>{{ totalValue|number_format(2, '.', ',') }}</h3>
+                    <p>Total Portfolio Value</p>
+                </div>
+                <div class="icon">
+                    <em class="fa fa-line-chart"></em>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>{{ totalCost|number_format(2, '.', ',') }}</h3>
+                    <p>Total Cost Basis</p>
+                </div>
+                <div class="icon">
+                    <em class="fa fa-money"></em>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="small-box {{ totalPnl >= 0 ? 'bg-olive' : 'bg-red' }}">
+                <div class="inner">
+                    <h3>{{ totalPnl >= 0 ? '+' : '' }}{{ totalPnl|number_format(2, '.', ',') }}</h3>
+                    <p>Unrealized P&amp;L ({{ totalPnlPct|number_format(2) }}%)</p>
+                </div>
+                <div class="icon">
+                    <em class="fa {{ totalPnl >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }}"></em>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="small-box bg-purple">
+                <div class="inner">
+                    <h3>{{ accounts|length }}</h3>
+                    <p>Connected Platforms</p>
+                </div>
+                <div class="icon">
+                    <em class="fa fa-plug"></em>
+                </div>
+                <a href="{{ route('portfolio.settings') }}" class="small-box-footer">
+                    Manage connections <em class="fa fa-arrow-circle-right"></em>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {# CHARTS ROW #}
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Portfolio Value Over Time</h3>
+                </div>
+                <div class="box-body">
+                    <canvas id="portfolio-history-chart" style="width:100%;height:350px;" height="350"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Allocation by Platform</h3>
+                </div>
+                <div class="box-body">
+                    <canvas id="platform-allocation-chart" style="width:100%;height:350px;" height="350"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6">
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Allocation by Asset Type</h3>
+                </div>
+                <div class="box-body">
+                    <canvas id="asset-type-chart" style="width:100%;height:300px;" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Top 10 Holdings</h3>
+                </div>
+                <div class="box-body">
+                    <canvas id="top-holdings-chart" style="width:100%;height:300px;" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# HOLDINGS BY PLATFORM #}
+    {% for platformId, platformData in holdingsByPlatform %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {% if platformData.account.platform == 'moomoo' %}
+                                <span class="fa fa-bar-chart"></span>
+                            {% elseif platformData.account.platform == 'fsmone' %}
+                                <span class="fa fa-university"></span>
+                            {% elseif platformData.account.platform == 'luno' %}
+                                <span class="fa fa-bitcoin"></span>
+                            {% endif %}
+                            {{ platformData.account.platform|capitalize }} &mdash; {{ platformData.account.name }}
+                            <small>
+                                Total: {{ platformData.total|number_format(2, '.', ',') }} {{ platformData.account.currency }}
+                                | P&amp;L:
+                                <span class="{{ platformData.pnl >= 0 ? 'text-green' : 'text-red' }}">
+                                    {{ platformData.pnl >= 0 ? '+' : '' }}{{ platformData.pnl|number_format(2, '.', ',') }}
+                                </span>
+                            </small>
+                        </h3>
+                        <div class="box-tools pull-right">
+                            {% if platformData.account.platform == 'luno' %}
+                                <a href="{{ route('portfolio.sync-luno', [platformData.account.id]) }}"
+                                   class="btn btn-box-tool btn-sm text-blue" title="Sync via API">
+                                    <span class="fa fa-refresh"></span> Sync Now
+                                </a>
+                            {% else %}
+                                <a href="{{ route('portfolio.import-form', [platformData.account.id]) }}"
+                                   class="btn btn-box-tool btn-sm text-blue" title="Import CSV">
+                                    <span class="fa fa-upload"></span> Import CSV
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="box-body no-padding">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th class="text-right">Quantity</th>
+                                    <th class="text-right">Avg Cost</th>
+                                    <th class="text-right">Current Price</th>
+                                    <th class="text-right">Market Value</th>
+                                    <th class="text-right">Cost Basis</th>
+                                    <th class="text-right">P&amp;L</th>
+                                    <th class="text-right">P&amp;L %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for holding in platformData.holdings %}
+                                    <tr>
+                                        <td><strong>{{ holding.symbol }}</strong></td>
+                                        <td>{{ holding.name }}</td>
+                                        <td>
+                                            <span class="label label-{{ holding.asset_type == 'stock' ? 'success' : (holding.asset_type == 'crypto' ? 'warning' : (holding.asset_type == 'fund' ? 'info' : 'default')) }}">
+                                                {{ holding.asset_type|capitalize }}
+                                            </span>
+                                        </td>
+                                        <td class="text-right">{{ holding.quantity }}</td>
+                                        <td class="text-right">{{ holding.avg_cost|number_format(4, '.', ',') }}</td>
+                                        <td class="text-right">{{ holding.current_price|number_format(4, '.', ',') }}</td>
+                                        <td class="text-right">{{ holding.market_value|number_format(2, '.', ',') }}</td>
+                                        <td class="text-right">{{ holding.cost_basis|number_format(2, '.', ',') }}</td>
+                                        <td class="text-right {{ holding.unrealized_pnl >= 0 ? 'text-green' : 'text-red' }}">
+                                            {{ holding.unrealized_pnl >= 0 ? '+' : '' }}{{ holding.unrealized_pnl|number_format(2, '.', ',') }}
+                                        </td>
+                                        <td class="text-right {{ holding.unrealized_pnl_pct >= 0 ? 'text-green' : 'text-red' }}">
+                                            {{ holding.unrealized_pnl_pct >= 0 ? '+' : '' }}{{ holding.unrealized_pnl_pct|number_format(2) }}%
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if platformData.account.last_synced_at %}
+                        <div class="box-footer">
+                            <small class="text-muted">
+                                Last synced: {{ platformData.account.last_synced_at|date('Y-m-d H:i') }}
+                            </small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if holdingsByPlatform|length == 0 %}
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <div class="box box-default">
+                    <div class="box-body text-center" style="padding:40px;">
+                        <em class="fa fa-line-chart fa-3x text-muted" style="margin-bottom:15px;display:block;"></em>
+                        <h3>No Portfolio Data Yet</h3>
+                        <p class="text-muted">
+                            Connect your Moomoo, FSMOne, or Luno accounts to see your unified portfolio dashboard.
+                        </p>
+                        <a href="{{ route('portfolio.settings') }}" class="btn btn-primary">
+                            <span class="fa fa-plus"></span> Add Platform Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {# RECENT TRANSACTIONS #}
+    {% if recentTransactions|length > 0 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Recent Transactions</h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Platform</th>
+                                    <th>Symbol</th>
+                                    <th>Type</th>
+                                    <th class="text-right">Quantity</th>
+                                    <th class="text-right">Price</th>
+                                    <th class="text-right">Amount</th>
+                                    <th class="text-right">Fee</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tx in recentTransactions %}
+                                    <tr>
+                                        <td>{{ tx.transacted_at|date('Y-m-d') }}</td>
+                                        <td>
+                                            {% set acct = accounts.where('id', tx.portfolio_account_id).first() %}
+                                            {{ acct ? acct.platform|capitalize : '—' }}
+                                        </td>
+                                        <td><strong>{{ tx.symbol }}</strong></td>
+                                        <td>
+                                            <span class="label label-{{ tx.type == 'buy' ? 'success' : (tx.type == 'sell' ? 'danger' : (tx.type == 'dividend' ? 'info' : 'default')) }}">
+                                                {{ tx.type|capitalize }}
+                                            </span>
+                                        </td>
+                                        <td class="text-right">{{ tx.quantity }}</td>
+                                        <td class="text-right">{{ tx.price|number_format(4, '.', ',') }}</td>
+                                        <td class="text-right">{{ tx.amount|number_format(2, '.', ',') }}</td>
+                                        <td class="text-right">{{ tx.fee|number_format(2, '.', ',') }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        var platformAllocationUrl = '{{ route('portfolio.chart.allocation-platform') }}';
+        var assetTypeAllocationUrl = '{{ route('portfolio.chart.allocation-asset-type') }}';
+        var historicalValueUrl = '{{ route('portfolio.chart.historical-value') }}';
+        var topHoldingsUrl = '{{ route('portfolio.chart.top-holdings') }}';
+    </script>
+    <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/portfolio/dashboard.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+{% endblock %}
+
+{% block styles %}
+    <style nonce="{{ JS_NONCE }}">
+        .small-box h3 { font-size: 28px; }
+        .text-green { color: #00a65a; }
+        .text-red { color: #dd4b39; }
+        .text-blue { color: #0073b7; }
+    </style>
+{% endblock %}

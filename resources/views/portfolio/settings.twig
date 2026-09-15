@@ -1,0 +1,253 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render('portfolio.settings') }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Add Platform Account</h3>
+                </div>
+                <form action="{{ route('portfolio.store') }}" method="POST">
+                    {{ csrf_field() }}
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="platform">Platform</label>
+                            <select name="platform" id="platform" class="form-control" onchange="toggleApiFields()">
+                                <option value="moomoo">Moomoo (Futu)</option>
+                                <option value="fsmone">FSMOne (iFAST)</option>
+                                <option value="luno">Luno (Crypto)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Account Name</label>
+                            <input type="text" name="name" id="name" class="form-control"
+                                   placeholder="e.g. My Moomoo US Stocks" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="currency">Base Currency</label>
+                            <select name="currency" id="currency" class="form-control">
+                                <option value="MYR">MYR - Malaysian Ringgit</option>
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="SGD">SGD - Singapore Dollar</option>
+                                <option value="HKD">HKD - Hong Kong Dollar</option>
+                                <option value="ZAR">ZAR - South African Rand</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="IDR">IDR - Indonesian Rupiah</option>
+                                <option value="NGN">NGN - Nigerian Naira</option>
+                            </select>
+                        </div>
+                        <div id="api-fields" style="display:none;">
+                            <div class="callout callout-info">
+                                <h4>Luno API Credentials</h4>
+                                <p>
+                                    Create a read-only API key in your Luno account:
+                                    Settings &rarr; API Keys &rarr; Create API Key.
+                                    Only "balances" and "transactions" permissions are needed.
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="api_key">API Key ID</label>
+                                <input type="text" name="api_key" id="api_key" class="form-control"
+                                       placeholder="Your Luno API Key ID" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="api_secret">API Key Secret</label>
+                                <input type="password" name="api_secret" id="api_secret" class="form-control"
+                                       placeholder="Your Luno API Key Secret" autocomplete="off">
+                            </div>
+                        </div>
+                        <div id="csv-info" style="display:block;">
+                            <div class="callout callout-info" id="moomoo-info">
+                                <h4>Moomoo Data Import</h4>
+                                <p>
+                                    Moomoo uses the FutuOpenD daemon and doesn't offer a direct REST API.
+                                    You can import your portfolio via:
+                                </p>
+                                <ul>
+                                    <li><strong>CSV export</strong> from the Moomoo app (Trade History / Positions)</li>
+                                    <li><strong>FutuOpenD bridge</strong> JSON (from a Python script running on your NAS)</li>
+                                </ul>
+                            </div>
+                            <div class="callout callout-info" id="fsmone-info" style="display:none;">
+                                <h4>FSMOne Data Import</h4>
+                                <p>
+                                    FSMOne doesn't provide a public API. Export your data from the FSMOne web portal:
+                                </p>
+                                <ul>
+                                    <li>Go to <strong>My Portfolio</strong> &rarr; <strong>Holdings</strong></li>
+                                    <li>Click <strong>Export</strong> / <strong>Download</strong> to get a CSV/XLS file</li>
+                                    <li>For transactions: <strong>Transaction History</strong> &rarr; <strong>Export</strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="fa fa-plus"></span> Add Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Connected Accounts</h3>
+                </div>
+                {% if accounts|length > 0 %}
+                    <div class="box-body no-padding">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Platform</th>
+                                    <th>Name</th>
+                                    <th>Currency</th>
+                                    <th>Last Synced</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for account in accounts %}
+                                    <tr>
+                                        <td>
+                                            {% if account.platform == 'moomoo' %}
+                                                <span class="label label-warning">Moomoo</span>
+                                            {% elseif account.platform == 'fsmone' %}
+                                                <span class="label label-info">FSMOne</span>
+                                            {% elseif account.platform == 'luno' %}
+                                                <span class="label label-primary">Luno</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ account.name }}</td>
+                                        <td>{{ account.currency }}</td>
+                                        <td>{{ account.last_synced_at ? account.last_synced_at|date('Y-m-d H:i') : 'Never' }}</td>
+                                        <td>
+                                            {% if account.platform == 'luno' %}
+                                                <a href="{{ route('portfolio.sync-luno', [account.id]) }}"
+                                                   class="btn btn-xs btn-success" title="Sync via API">
+                                                    <span class="fa fa-refresh"></span>
+                                                </a>
+                                            {% endif %}
+                                            {% if account.platform in ['moomoo', 'fsmone'] %}
+                                                <a href="{{ route('portfolio.import-form', [account.id]) }}"
+                                                   class="btn btn-xs btn-info" title="Import CSV">
+                                                    <span class="fa fa-upload"></span>
+                                                </a>
+                                            {% endif %}
+                                            <form action="{{ route('portfolio.destroy', [account.id]) }}" method="POST"
+                                                  style="display:inline;"
+                                                  onsubmit="return confirm('Delete this account and all its data?');">
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                                <button type="submit" class="btn btn-xs btn-danger" title="Delete">
+                                                    <span class="fa fa-trash"></span>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="box-body text-center" style="padding:30px;">
+                        <em class="fa fa-plug fa-2x text-muted" style="margin-bottom:10px;display:block;"></em>
+                        <p class="text-muted">No accounts connected yet. Add one using the form on the left.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            {# SYNC LOG #}
+            {% if syncLogs|length > 0 %}
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Recent Sync Activity</h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <table class="table table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <th>Message</th>
+                                    <th>Records</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in syncLogs %}
+                                    <tr>
+                                        <td>{{ log.created_at|date('Y-m-d H:i') }}</td>
+                                        <td>
+                                            <span class="label label-{{ log.status == 'success' ? 'success' : (log.status == 'error' ? 'danger' : 'warning') }}">
+                                                {{ log.status }}
+                                            </span>
+                                        </td>
+                                        <td>{{ log.message }}</td>
+                                        <td>{{ log.records_synced }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
+            {# SYNOLOGY NAS CRON SETUP GUIDE #}
+            <div class="box box-default collapsed-box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Synology NAS Cron Setup</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <em class="fa fa-plus"></em>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <p>To auto-sync your Luno account on your Synology NAS, add a scheduled task:</p>
+                    <ol>
+                        <li>Open <strong>Control Panel</strong> &rarr; <strong>Task Scheduler</strong></li>
+                        <li>Create &rarr; <strong>Scheduled Task</strong> &rarr; <strong>User-defined script</strong></li>
+                        <li>Set schedule (e.g., every 6 hours)</li>
+                        <li>In the <strong>Task Settings</strong> tab, enter:</li>
+                    </ol>
+                    <pre>cd /volume1/docker/firefly-iii && docker exec firefly-iii php artisan portfolio:sync</pre>
+                    <p class="text-muted">
+                        Or if running natively:
+                    </p>
+                    <pre>cd /path/to/firefly-iii && php artisan portfolio:sync</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        function toggleApiFields() {
+            var platform = document.getElementById('platform').value;
+            var apiFields = document.getElementById('api-fields');
+            var csvInfo = document.getElementById('csv-info');
+            var moomooInfo = document.getElementById('moomoo-info');
+            var fsmoneInfo = document.getElementById('fsmone-info');
+
+            if (platform === 'luno') {
+                apiFields.style.display = 'block';
+                csvInfo.style.display = 'none';
+            } else {
+                apiFields.style.display = 'none';
+                csvInfo.style.display = 'block';
+                moomooInfo.style.display = platform === 'moomoo' ? 'block' : 'none';
+                fsmoneInfo.style.display = platform === 'fsmone' ? 'block' : 'none';
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
