@@ -21,7 +21,7 @@ if [ ! -f .env ]; then
     sed -i 's/^APP_DEBUG=false/APP_DEBUG=true/' .env
     sed -i 's/^DB_CONNECTION=mysql/DB_CONNECTION=sqlite/' .env
     sed -i "s|^DB_DATABASE=firefly|DB_DATABASE=${ROOT}/database/database.sqlite|" .env
-    sed -i 's|^APP_URL=http://localhost|APP_URL=http://localhost:8080|' .env
+    sed -i 's|^APP_URL=http://localhost|APP_URL=http://localhost:8000|' .env
 fi
 
 echo "==> Ensuring SQLite database files (application + test suite)"
