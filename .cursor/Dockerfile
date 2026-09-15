@@ -2,10 +2,15 @@ FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# System toolchain for Firefly III (Laravel):
+#   - PHP 8.4 CLI + the extensions required by composer.json
+#   - Composer (PHP dependency manager)
+#   - Node.js 22 (builds the v1 Laravel Mix and v2 Vite frontends)
+# The application uses a local SQLite database for development (php8.4-sqlite3),
+# so no separate database server is required.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates curl git unzip gnupg software-properties-common \
-        mariadb-server \
     && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && add-apt-repository -y ppa:ondrej/php \
     && apt-get update \
@@ -16,12 +21,5 @@ RUN apt-get update \
         php8.4-readline php8.4-sqlite3 php8.4-tokenizer php8.4-fileinfo \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /var/lib/apt/lists/*
-
-RUN service mariadb start \
-    && mysql -e "CREATE DATABASE IF NOT EXISTS firefly; \
-        CREATE USER IF NOT EXISTS 'firefly'@'localhost' IDENTIFIED BY 'secret_firefly_password'; \
-        GRANT ALL PRIVILEGES ON firefly.* TO 'firefly'@'localhost'; \
-        FLUSH PRIVILEGES;" \
-    && service mariadb stop
 
 USER ubuntu
